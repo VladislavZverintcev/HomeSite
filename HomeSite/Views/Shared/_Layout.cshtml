@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <title>Мой дом</title>
+
+</head>
+<body>
+    <!--меню-->
+    <div class="wrapper">
+        <div class="header">
+            <div class="titlebar">
+                <div><a class="homelabel" href="~/Home/Index"><h1>🏠 Мой дом</h1></a></div>
+                <div><h1 id="current_time_block" class="gltime"></h1></div>
+                <script src="@Url.Content("~/js/time.js")" asp-append-version="true"></script>
+                <script type="text/javascript">
+                    startTime();
+                </script>
+            </div>
+        </div>
+        <!--основной контент-->
+        <div class="content">
+            @RenderBody()
+        </div>
+        <div class="footer">
+            <hr />
+            <p>© 2022 - Зверинцев В.В.</p>
+        </div>
+    </div>
+</body>
+</html>
