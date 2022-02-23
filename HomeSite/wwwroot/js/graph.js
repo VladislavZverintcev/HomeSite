@@ -2,10 +2,10 @@
 let canvas = document.querySelector(`#canvas`);
 let ctx = canvas.getContext(`2d`);
 let curdate = new Date();
-let workOffsetxstart = 40;
-let workOffsetxend = 10;
+let workOffsetxstart = 30;
+let workOffsetxend = 30;
 let workOffsetystart = 10;
-let workOffsetyend = 50;
+let workOffsetyend = 40;
 let textOffset = 2;
 
 function GetGraph(timetype) {
@@ -34,7 +34,7 @@ function GetGraph(timetype) {
     //Рабочее поле
     ctx.strokeStyle = "red";
     ctx.fillStyle = "white";
-    //Рисуем шкалу y
+    //Рисуем шкалу y температуры
     for (let i = 0; i < 21; i++) {
         ctx.fillText((50 - i * 5) + "°", 5, (workOffsetystart + i * ((canvas.height - workOffsetystart - workOffsetyend) / 20)) + textOffset );
         ctx.beginPath();
@@ -44,40 +44,62 @@ function GetGraph(timetype) {
         ctx.stroke();
         //вспомогательная
         ctx.strokeStyle = '#2a0000';
+        ctx.beginPath();
         ctx.moveTo(workOffsetxstart, workOffsetystart + i * (canvas.height - workOffsetystart - workOffsetyend) / 20);
         ctx.lineTo(workOffsetxstart + GetWorkCanvasWidht(), workOffsetystart + i * (canvas.height - workOffsetystart - workOffsetyend) / 20);
         ctx.stroke();
     }
+    //Рисуем шкалу y влажности
+    for (let i = 0; i < 21; i++) {
+        ctx.textAlign = "right";
+        ctx.fillText((100 - i * 5) + "%", GetWorkCanvasWidht() + workOffsetxstart + workOffsetxend -5, (workOffsetystart + i * ((canvas.height - workOffsetystart - workOffsetyend) / 20)) + textOffset);
+        ctx.beginPath();
+        ctx.strokeStyle = '#01faf2';
+        ctx.moveTo(workOffsetxstart + GetWorkCanvasWidht(), workOffsetystart + i * (canvas.height - workOffsetystart - workOffsetyend) / 20);
+        ctx.lineTo(workOffsetxstart + GetWorkCanvasWidht() + 5, workOffsetystart + i * (canvas.height - workOffsetystart - workOffsetyend) / 20);
+        ctx.stroke();
+    }
     //Рисуем шкалу x
-    ctx.strokeStyle = "red";
+    ctx.strokeStyle = "white";
     if (timetype == "24h") {
-        ctx.save();
         ctx.translate(0, 0);
         ctx.rotate(-Math.PI / 2);
         ctx.textAlign = "left";
 
         for (let i = 0; i < 24; i++) {
             /*ctx.fillText(hoursminutes_time(-3600000 * i), canvas.width - canvas.width/24*i, canvas.height - 100);*/
-            ctx.fillText(hoursminutes_time(curdate, - 3600000 * i), -1 * (canvas.height - workOffsetystart), canvas.width - (canvas.width - workOffsetxstart + workOffsetxend) / 24 * i - workOffsetxend + textOffset);
+            ctx.fillText(hoursminutes_time(curdate, - 3600000 * i), -1 * (canvas.height - workOffsetystart), canvas.width - (GetWorkCanvasWidht() / 23 * i) - workOffsetxend + textOffset);
             ctx.beginPath();
-            ctx.strokeStyle = "red";
-            ctx.moveTo(-1 * (canvas.height - workOffsetyend + 5), canvas.width - (canvas.width - workOffsetxstart + workOffsetxend) / 25 * i - workOffsetxend);
-            ctx.lineTo(-1 * (canvas.height - workOffsetyend), canvas.width - (canvas.width - workOffsetxstart + workOffsetxend) / 25 * i - workOffsetxend);
+            ctx.strokeStyle = "white";
+            ctx.moveTo(-1 * (canvas.height - workOffsetyend + 5), canvas.width - (GetWorkCanvasWidht() / 23 * i) - workOffsetxend);
+            ctx.lineTo(-1 * (canvas.height - workOffsetyend), canvas.width - (GetWorkCanvasWidht() / 23 * i) - workOffsetxend);
             ctx.stroke();
             //вспомогательная
+            ctx.beginPath();
             ctx.strokeStyle = '#2a0000';
-            ctx.moveTo(-1 * (canvas.height - workOffsetyend), canvas.width - (canvas.width - workOffsetxstart + workOffsetxend) / 25 * i - workOffsetxend);
-            ctx.lineTo(-1 * (workOffsetystart), canvas.width - (canvas.width - workOffsetxstart + workOffsetxend) / 25 * i - workOffsetxend);
+            ctx.moveTo(-1 * (canvas.height - workOffsetyend), canvas.width - (GetWorkCanvasWidht() / 23 * i) - workOffsetxend);
+            ctx.lineTo(-1 * (workOffsetystart), canvas.width - (GetWorkCanvasWidht() / 23 * i) - workOffsetxend);
             ctx.stroke();
         }
         ctx.save();
         ctx.rotate(Math.PI / 2);
 
-        //Нулевая линия
-        ctx.strokeStyle = "blue";
+        //Нулевая линия температуры
+        ctx.strokeStyle = '#ba8484';
+        ctx.lineWidth = 0.5;
+        /*ctx.setLineDash([20, 2]);*/
         ctx.beginPath();
-        ctx.moveTo(workOffsetxstart, GetYFormTemp(0));
-        ctx.lineTo(workOffsetxstart + GetWorkCanvasWidht(), GetYFormTemp(0));
+        ctx.moveTo(workOffsetxstart, GetYFromTemp(0));
+        ctx.lineTo(workOffsetxstart + GetWorkCanvasWidht(), GetYFromTemp(0));
+        ctx.stroke();
+
+        //Нулевая линия влажности
+        ctx.strokeStyle = '#8390ba';
+        ctx.lineWidth = 0.5;
+        /*ctx.setLineDash([20, 2]);*/
+        ctx.beginPath();
+        ctx.moveTo(workOffsetxstart, GetYFromHumi(0) - 1);
+        ctx.lineTo(workOffsetxstart + GetWorkCanvasWidht(), GetYFromHumi(0) - 1);
         ctx.stroke();
 
         GetListValues();
@@ -116,10 +138,14 @@ function GetGraph(timetype) {
         var timepos = valueTicks - Get24hLeterTick() - (offset * 60000 * ticksPerMillisecond);
         return ConvWorkXToCanv((timepos / ticksPer24h) * GetWorkCanvasWidht());
     }
-    function GetYFormTemp(valueTemp) {
+    function GetYFromTemp(valueTemp) {
         var absval = valueTemp + 50;
         return ConvWorkYToCanv(GetWorkCanvasHeight() - ((absval / 100) * GetWorkCanvasHeight()));
     }
+    function GetYFromHumi(valueHumi) {
+        return ConvWorkYToCanv(GetWorkCanvasHeight() - ((valueHumi / 100) * GetWorkCanvasHeight()));
+    }
+
     function GetNowTicks() {
         // the number of .net ticks at the unix epoch
         var epochTicks = 621355968000000000;
@@ -147,12 +173,24 @@ function GetGraph(timetype) {
         listSensValues = data.map(JSON.stringify);
         //График
         ctx.lineWidth = 2.0; // Ширина линии
+        ctx.setLineDash([]);
+        //Тепература
         ctx.strokeStyle = "red";
         if (listSensValues.length > 1) {
             for (let i = 0; i < listSensValues.length - 1; i++) {
                 ctx.beginPath();
-                ctx.moveTo(GetXfromTime(JSON.parse(listSensValues[i]).registredDateTime), GetYFormTemp(JSON.parse(listSensValues[i]).temperature));
-                ctx.lineTo(GetXfromTime(JSON.parse(listSensValues[i + 1]).registredDateTime), GetYFormTemp(JSON.parse(listSensValues[i + 1]).temperature));
+                ctx.moveTo(GetXfromTime(JSON.parse(listSensValues[i]).registredDateTime), GetYFromTemp(JSON.parse(listSensValues[i]).temperature));
+                ctx.lineTo(GetXfromTime(JSON.parse(listSensValues[i + 1]).registredDateTime), GetYFromTemp(JSON.parse(listSensValues[i + 1]).temperature));
+                ctx.stroke();
+            }
+        }
+        //Влажность
+        ctx.strokeStyle = '#01faf2';
+        if (listSensValues.length > 1) {
+            for (let i = 0; i < listSensValues.length - 1; i++) {
+                ctx.beginPath();
+                ctx.moveTo(GetXfromTime(JSON.parse(listSensValues[i]).registredDateTime), GetYFromHumi(JSON.parse(listSensValues[i]).humidity));
+                ctx.lineTo(GetXfromTime(JSON.parse(listSensValues[i + 1]).registredDateTime), GetYFromHumi(JSON.parse(listSensValues[i + 1]).humidity));
                 ctx.stroke();
             }
         }
