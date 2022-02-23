@@ -10,5 +10,6 @@ namespace HomeSite.Data.Model
     {
         bool CheckConnection();
         Dht11_datamodel GetLastSensorValue();
+        List<Dht11_datamodel> GetListSensorValues(long startTicks, long finishTicks);
     }
 }

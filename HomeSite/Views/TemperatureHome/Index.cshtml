@@ -8,5 +8,14 @@
     <div id="curtemp" class="textvaluesbigtemp"></div>
     <div class="textcontentanno">💧 Влажность, %:</div>
     <div id="curhumi" class="textvaluesbighumi"></div>
-    <div class="textcontentlink"><a href="">📈 График</a></div>
+    <div class="textcontentlink"><a href="">📈 График за 24 часа:</a></div>
+    <div class="canvas-wrapper">
+        <canvas id="canvas" width="330" height="200">
+            Браузер не поддерживает Canvas
+        </canvas>
+    </div>
+    <script src="js/graph.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        GetGraph("24h");
+    </script>
 </div>
