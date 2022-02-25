@@ -13,25 +13,15 @@ namespace HomeSite.Controllers
     [ApiController]
     public class GetDht11ValuesController : ControllerBase
     {
-        // GET api/GetDht11Values/temp
-        [HttpGet("temp")]
-        public ActionResult<decimal> GetTemp()
+        // GET api/GetDht11Values/last
+        [HttpGet("last")]
+        public ActionResult<decimal> GetLast()
         {
             Dht11RepEF rep = new Dht11RepEF();
             var lastvalue = rep.GetLastSensorValue();
             if (lastvalue == null)
                 return NotFound();
-            return new ObjectResult(lastvalue.Temperature);
-        }
-        // GET api/GetDht11Values/humi
-        [HttpGet("humi")]
-        public ActionResult<decimal> GetHumi()
-        {
-            Dht11RepEF rep = new Dht11RepEF();
-            var lastvalue = rep.GetLastSensorValue();
-            if (lastvalue == null)
-                return NotFound();
-            return new ObjectResult(lastvalue.Humidity);
+            return new ObjectResult(lastvalue);
         }
         // GET api/GetDht11Values/startTicks/finishTicks
         [HttpGet("{startTicks}/{finishTicks}")]

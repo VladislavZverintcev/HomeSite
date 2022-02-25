@@ -1,36 +1,26 @@
-﻿const uriTemp = 'api/GetDht11Values/temp';
-const uriHumi = 'api/GetDht11Values/humi';
+﻿const uriLast = 'api/GetDht11Values/last';
 let timesi = 0;
 const getValuesdelay = 6000;
 
 function start() {
     if (timesi == 0) {
         timesi = getValuesdelay;
-        getCurTemp();
-        getCurHumi();
+        getCurLast();
         setTimeout(start, timesi);
     }
     else {
-        getCurTemp();
-        getCurHumi();
+        getCurLast();
         setTimeout(start, timesi);
     }
 }
-function getCurTemp() {
-    fetch(uriTemp)
+function getCurLast() {
+    fetch(uriLast)
         .then(response => response.json())
-        .then(data => getTemp(data))
+        .then(data => getLast(data))
         .catch(error => console.error('Unable to get items.', error));
 }
-function getCurHumi() {
-    fetch(uriHumi)
-        .then(response => response.json())
-        .then(data => getHumi(data))
-        .catch(error => console.error('Unable to get items.', error));
-}
-function getTemp(data) {
-    document.getElementById('curtemp').innerHTML = data;
-}
-function getHumi(data) {
-    document.getElementById('curhumi').innerHTML = data;
+function getLast(data) {
+    var valueObject = ParseObject(data);
+    document.getElementById('curhumi').innerHTML = valueObject.humidity;
+    document.getElementById('curtemp').innerHTML = valueObject.temperature;
 }

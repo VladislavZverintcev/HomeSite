@@ -164,38 +164,35 @@ function GetGraph(timetype) {
         var ticksPerMillisecond = 10000;
         fetch(uriList + '/' + (Get24hLeterTick() + offset * 60000 * ticksPerMillisecond) + '/' + GetNowTicks())
             .then(response => response.json())
-            .then(data => ParseListValues(data))
+            .then(data => Get24hoursGraph(data))
             .catch(error => console.error('Unable to get items.', error));
     }
-    function ParseListValues(data) {
-
-        var listSensValues = [];
-        listSensValues = data.map(JSON.stringify);
+    function Get24hoursGraph(data) {
+        var sensValues = [];
+        sensValues = ParseListObject(data);
         //График
         ctx.lineWidth = 2.0; // Ширина линии
         ctx.setLineDash([]);
         //Тепература
         ctx.strokeStyle = "red";
-        if (listSensValues.length > 1) {
-            for (let i = 0; i < listSensValues.length - 1; i++) {
+        if (sensValues.length > 1) {
+            for (let i = 0; i < sensValues.length - 1; i++) {
                 ctx.beginPath();
-                ctx.moveTo(GetXfromTime(JSON.parse(listSensValues[i]).registredDateTime), GetYFromTemp(JSON.parse(listSensValues[i]).temperature));
-                ctx.lineTo(GetXfromTime(JSON.parse(listSensValues[i + 1]).registredDateTime), GetYFromTemp(JSON.parse(listSensValues[i + 1]).temperature));
+                ctx.moveTo(GetXfromTime(sensValues[i].registredDateTime), GetYFromTemp(sensValues[i].temperature));
+                ctx.lineTo(GetXfromTime(sensValues[i + 1].registredDateTime), GetYFromTemp(sensValues[i + 1].temperature));
                 ctx.stroke();
             }
         }
         //Влажность
         ctx.strokeStyle = '#01faf2';
-        if (listSensValues.length > 1) {
-            for (let i = 0; i < listSensValues.length - 1; i++) {
+        if (sensValues.length > 1) {
+            for (let i = 0; i < sensValues.length - 1; i++) {
                 ctx.beginPath();
-                ctx.moveTo(GetXfromTime(JSON.parse(listSensValues[i]).registredDateTime), GetYFromHumi(JSON.parse(listSensValues[i]).humidity));
-                ctx.lineTo(GetXfromTime(JSON.parse(listSensValues[i + 1]).registredDateTime), GetYFromHumi(JSON.parse(listSensValues[i + 1]).humidity));
+                ctx.moveTo(GetXfromTime(sensValues[i].registredDateTime), GetYFromHumi(sensValues[i].humidity));
+                ctx.lineTo(GetXfromTime(sensValues[i + 1].registredDateTime), GetYFromHumi(sensValues[i + 1].humidity));
                 ctx.stroke();
             }
         }
-
     //График
-        
     }
 }
