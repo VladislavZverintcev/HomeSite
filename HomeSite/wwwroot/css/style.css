@@ -51,6 +51,12 @@ body {
             text-decoration: none;
             color: white;
         }
+.textpageanno {
+    color: white;
+    font-size: 1.3em;
+    text-align: center;
+    line-height: 2;
+}
 .textcontentanno {
     color: #515151;
     text-align: center;
@@ -58,12 +64,12 @@ body {
 }
 .textvaluesbigtemp {
     color: bisque;
-    font-size: 5em;
+    font-size: 4em;
     text-align: center;
 }
 .textvaluesbighumi {
     color: lightcyan;
-    font-size: 5em;
+    font-size: 4em;
     text-align: center;
 }
 .textcontentlink {

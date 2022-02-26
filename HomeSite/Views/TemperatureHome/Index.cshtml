@@ -1,22 +1,21 @@
 ﻿@namespace HomeSite.Data.EF
 <div>
-    <script src="js/common.js"  type="text/javascript"></script>
-    <script src="js/GetCurrentSensValues.js" asp-append-version="true"></script>
+    <script src="js/common.js" type="text/javascript"></script>
+    <script src="js/graph.js" asp-append-version="true"></script>
+    <script src="js/GetCurrentSensValuesHome.js" asp-append-version="true"></script>
+    <script src="js/HomeTimers.js" asp-append-version="true"></script>
     <script type="text/javascript">
-        start();
+        starth();
     </script>
+    <div class="textpageanno">Домашние показания</div>
     <div class="textcontentanno">🌡 Температура, C°:</div>
     <div id="curtemp" class="textvaluesbigtemp"></div>
     <div class="textcontentanno">💧 Влажность, %:</div>
     <div id="curhumi" class="textvaluesbighumi"></div>
-    <div class="textcontentlink"><a href="">📈 График за 24 часа:</a></div>
+    <div class="textcontentanno">📈 График за 24 часа:</div>
     <div class="canvas-wrapper">
-        <canvas id="canvas" width="330" height="200">
+        <canvas id="24hourgraph" width="330" height="200">
             Браузер не поддерживает Canvas
         </canvas>
     </div>
-    <script src="js/graph.js" asp-append-version="true"></script>
-    <script type="text/javascript">
-        GetGraph("24h");
-    </script>
 </div>

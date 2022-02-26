@@ -13,8 +13,8 @@ namespace HomeSite.Controllers
     [ApiController]
     public class GetDht11ValuesController : ControllerBase
     {
-        // GET api/GetDht11Values/last
-        [HttpGet("last")]
+        // GET api/GetDht11Values/lasthome
+        [HttpGet("lasthome")]
         public ActionResult<decimal> GetLast()
         {
             Dht11RepEF rep = new Dht11RepEF();
@@ -23,8 +23,8 @@ namespace HomeSite.Controllers
                 return NotFound();
             return new ObjectResult(lastvalue);
         }
-        // GET api/GetDht11Values/startTicks/finishTicks
-        [HttpGet("{startTicks}/{finishTicks}")]
+        // GET api/GetDht11Values/home/startTicks/finishTicks
+        [HttpGet("home/{startTicks}/{finishTicks}")]
         public ActionResult<List<Dht11_datamodel>> GetList(long startTicks, long finishTicks)
         {
             Dht11RepEF rep = new Dht11RepEF();
